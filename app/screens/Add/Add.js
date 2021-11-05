@@ -87,7 +87,7 @@ const Add = ({ navigation }) => {
               title="Submit"
               color="#CD5C5C" 
               onPress={
-                () => { registerCity(); navigation.navigate('ViewAllCities');
+                () => { registerCity(); navigation.navigate('Maps');
                 }
               } 
               />

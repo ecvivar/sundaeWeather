@@ -8,7 +8,7 @@ import * as SQLite from 'expo-sqlite';
 //import Fondo from './assets/sundae.png';
 import Home from './app/screens/Home';
 import Detail from './app/screens/Detail';
-import Search from './app/screens/Search';
+import Maps from './app/screens/Maps';
 import Weather from './app/screens/Weather';
 import Add from './app/screens/Add';
 import ViewAllCities from './app/screens/Detail/ViewAllCities';
@@ -37,7 +37,7 @@ const App = () => {
       <Stack.Navigator>
         <Stack.Screen name="Home" component={Home} />
         <Stack.Screen name="Detail" component={Detail} />
-        <Stack.Screen name="Search" component={Search} />
+        <Stack.Screen name="Maps" component={Maps} />
         <Stack.Screen name="Weather" component={Weather} />
         <Stack.Screen name="Add" component={Add} />
         <Stack.Screen name="ViewAllCities" component={ViewAllCities} />

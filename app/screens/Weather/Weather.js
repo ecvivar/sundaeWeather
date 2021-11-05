@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import {View, Text, Button, StyleSheet} from 'react-native';
+import {View, Text, Button, StyleSheet, Alert} from 'react-native';
 import * as SQLite from 'expo-sqlite';
 import axios from 'axios';
 
 const db = SQLite.openDatabase('city_db.db');
 
-export default function Weather ({route, navigation}) {
+const Weather = ({route, navigation}) => {
   const [userCity, setUserCity] = useState({});
   const [infoCity, setInfoCity] = useState({});
 
@@ -17,14 +17,14 @@ export default function Weather ({route, navigation}) {
         if (len > 0) {
           setUserCity(results.rows.item(0));
         } else {
-          alert ('City Not Found')
+          alert ('City Not Found');
         }
       });
     });
 
 //API_KEY = '562c8cf7ac4589daca68d9eeaa5237ea';
 
-  //const getWeather = () => {
+  const getWeather = () => {
 
     console.log(userCity.city_name);
     console.log(userCity.city_state);
@@ -34,20 +34,20 @@ export default function Weather ({route, navigation}) {
       .then(response => {
         const info = response.data;
         setInfoCity({
-          ciudad: info.main.name,
-          pais: info.main.country,
-          condiciones: info.weather.description,
+          ciudad: info.name,
+          pais: info.sys.country,
+          condiciones: info.weather[0].description,
           temperatura: info.main.temp,
           humedad: info.main.humidity,
           viento: info.wind.speed,
-        });
+        })
         console.log('weather',info)
-      });
+      })
+
     } else {
       Alert.alert("Ciudad no encontrada");
     }
-
-  //}
+  }
       return (
         <View style={styles.container}>
           <Text>Weather City</Text>
@@ -59,9 +59,9 @@ export default function Weather ({route, navigation}) {
             <Text> City Country: {userCity.city_country} </Text>
           </View> */}
           <View>
-            <Text>Ciudad: {infoCity.temperatura}</Text>
-            <Text>Pais: {infoCity.temperatura}</Text>
-            <Text>Condiciones: {infoCity.temperatura}</Text>
+            <Text>Ciudad: {infoCity.ciudad}</Text>
+            <Text>Pais: {infoCity.pais}</Text>
+            <Text>Condiciones: {infoCity.condiciones}</Text>
             <Text>Temperatura: {infoCity.temperatura}</Text>
             <Text>Humedad: {infoCity.humedad}</Text>
             <Text>Viento: {infoCity.viento}</Text>
@@ -70,7 +70,7 @@ export default function Weather ({route, navigation}) {
           <Button
             title="Weather"
             color="#CD5C5C"
-            //onPress={getWeather}
+            onPress={getWeather}
           />
           <Button
             title="Cerrar"
@@ -80,18 +80,19 @@ export default function Weather ({route, navigation}) {
           </View>
         </View>
       );
-    };
+};
 
-    const styles = StyleSheet.create({
-      container: {
-        flex: 1,
-        justifyContent: 'space-around',
-        alignItems: 'center',
-        backgroundColor: '#FDEDEC',
-      },
-      btn_row: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-      },
-    });
-  
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      justifyContent: 'space-around',
+      alignItems: 'center',
+      backgroundColor: '#FDEDEC',
+    },
+    btn_row: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+    },
+  });
+
+export default Weather;  
