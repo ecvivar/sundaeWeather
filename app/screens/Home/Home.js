@@ -1,9 +1,8 @@
 import React, {useEffect} from 'react';
 import {Text, View, Animated, StyleSheet, Button} from 'react-native';
 import Fondo from '../../assets/sundae.png';
-//import { openDatabase } from 'react-native-sqlite-storage';
 import * as SQLite from 'expo-sqlite';
-// Connction to access DB
+
 const db = SQLite.openDatabase('city_db.db');
 
 export default function Home ({ navigation }) {

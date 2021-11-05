@@ -8,8 +8,6 @@ import {
   SafeAreaView, 
   ScrollView
 } from 'react-native';
-//import { ScrollView } from 'react-native-gesture-handler';
-//import { openDatabase } from 'react-native-sqlite-storage';
 import * as SQLite from 'expo-sqlite';
 
 const db = SQLite.openDatabase('city_db.db');
@@ -19,7 +17,7 @@ const Add = ({ navigation }) => {
   let [userState, setUserState] = useState('');
   let [userCountry, setUserCountry] = useState('');
 
-  let register_user = () => {
+  let registerCity = () => {
     console.log(userCity, userState, userCountry);
 
     if (!userCity) {
@@ -38,25 +36,24 @@ const Add = ({ navigation }) => {
     db.transaction((tx) => {
       tx.executeSql(
         'INSERT INTO tbl_city (city_name, city_state, city_country) VALUES (?,?,?)',
-        [userCity, userState, userCountry]
-        ,
+        [userCity, userState, userCountry],
         (tx, results) => {
           console.log('Results', results.rowsAffected);
-          if (results.rowsAffected > 0) {
-            Alert.alert(
-              'Success',
-              'You are Registered Successfully',
-              [
-                {
-                  text: 'Ok',
-                  onPress: () => navigation.navigate('ViewAllCities'),
-                },
-              ],
-              { cancelable: false },
-            );
-          } else alert('Registration Failed');
-        },
-      );
+          // if (results.rowsAffected > 0) {
+          //   Alert.alert(
+          //     'Success',
+          //     'You are Registered Successfully',
+          //     [
+          //       {
+          //         text: 'Ok',
+          //         onPress: () => navigation.navigate('ViewAllCities'),
+          //       },
+          //     ],
+          //     { cancelable: false },
+          //   );
+          // } else {alert('Registration Failed')
+          // }
+        });
     });
   };
 
@@ -89,7 +86,10 @@ const Add = ({ navigation }) => {
               <Button 
               title="Submit"
               color="#CD5C5C" 
-              onPress={register_user} 
+              onPress={
+                () => { registerCity(); navigation.navigate('ViewAllCities');
+                }
+              } 
               />
           </ScrollView>
         </View>

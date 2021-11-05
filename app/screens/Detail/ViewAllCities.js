@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import {Text, View, FlatList, SafeAreaView, TouchableOpacity, StyleSheet, StatusBar, Button } from 'react-native';
-//import {openDatabase} from 'react-native-sqlite-storage';
 import * as SQLite from 'expo-sqlite';
 
 //Conexion a la DB
@@ -23,7 +22,7 @@ const ViewAllCities = ({navigation}) => {
     });
   }, []);
 
-//Funcion para listar los item
+//Listar los item
   let listItemView = (item) => {
     return (
       <View 
@@ -43,9 +42,7 @@ const ViewAllCities = ({navigation}) => {
     <SafeAreaView style={styles.container}>  
             <FlatList
               data={flatListItems}
-              //ItemSeparatorComponent={listViewItemSeparator}
               keyExtractor={(item, index) => index.toString()}
-              //renderItem={({item}) => listItemView(item)}
               renderItem={({item}) => (
                 <View 
                   key={item.city_id}

@@ -14,11 +14,19 @@ const Delete = ({route, navigation}) => {
       [route.params.paramKey],
       (tx, results) => {
         console.log('Results', results.rowsAffected);
-        if (results.rowsAffected > 0) {
-          Alert.alert('Success','La ciudad seleccionada ha sido borrada', [{text: 'Ok', onPress: () => navigation.navigate('ViewAllCities'),},],{cancelable: false},);
-        } else {
-          alert('No se encontron datos');
-        }
+        // if (results.rowsAffected > 0) {
+        //   Alert(
+        //     'Success','La ciudad seleccionada ha sido borrada',
+        //     [
+        //       {text: 'Ok',
+        //       onPress: () => navigation.navigate('ViewAllCities'),
+        //       },
+        //     ],
+        //     {cancelable: false},
+        //     );
+        // } else {
+        //   alert('No se encontron datos');
+        // }
       });
     });
   };
@@ -26,13 +34,14 @@ const Delete = ({route, navigation}) => {
   return (
     <View style={styles.container}>
       <Text>Desea Eliminar de la Lista?</Text>
-      {/* <Text>{route.params.paramKey}</Text> */}
-
       <Button
         title="Delete"
         color="#CD5C5C"
         // onPress = {navigation.navigate('ViewAllCities')}
-        onPress={deleteCity}
+        onPress={
+          () => { deleteCity(); navigation.navigate('Home');
+                }
+        }
       />
     </View>
   );
