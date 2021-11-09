@@ -1,23 +1,27 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   StyleSheet,
   View,
   Alert,
   TextInput,
   Button,
-  SafeAreaView, 
-  ScrollView
+  SafeAreaView,
+  StatusBar
 } from 'react-native';
 import * as SQLite from 'expo-sqlite';
+import axios from 'axios';
 
 const db = SQLite.openDatabase('city_db.db');
 
 const Add = ({ navigation }) => {
-  let [userCity, setUserCity] = useState('');
-  let [userState, setUserState] = useState('');
-  let [userCountry, setUserCountry] = useState('');
+  const [userCity, setUserCity] = useState('');
+  const [userState, setUserState] = useState('');
+  const [userCountry, setUserCountry] = useState('');
 
-  let registerCity = () => {
+  //useState para tomar las coordenadas
+  const [coordCity, setCoordCity] = useState({});
+
+  const registerCity = () => {
     console.log(userCity, userState, userCountry);
 
     if (!userCity) {
@@ -57,43 +61,98 @@ const Add = ({ navigation }) => {
     });
   };
 
+  //Vamos a intentar obtener coordenadas de la API de Openweather para pasarlas al mapa
+
+
+  const getWeather = () => {
+
+    // infoCity= ({
+    //   ciudad: '',
+    //   pais: '',
+    //   lon: 0,
+    //   lat: 0,
+    // })
+
+    console.log(userCity);
+    console.log(userCountry);
+
+    if (userCity != null) {
+      axios.get(`https://api.openweathermap.org/data/2.5/weather?q=${userCity},${userCountry}&appid=128cbb6d697b9515f235f503e5961922&units=metric&lang=esp`)
+        .then(response => {
+          const info = response.data;
+          setCoordCity({
+            ciudad: info.name,
+            pais: info.sys.country,
+            lon: info.coord.lon,
+            lat: info.coord.lat
+          });
+          console.log('weather', info);
+          console.log('Longitud:', info.coord.lon);
+          console.log('Latitud:', info.coord.lat);
+        })
+
+    } else {
+      Alert.alert("Ciudad no encontrada");
+    }
+
+  }
+
+  console.log(coordCity.lon);
+  console.log(coordCity.lat);
+  //
+
   return (
     <SafeAreaView style={styles.container}>
-      <View style={{ flex: 1, backgroundColor: 'white' }}>
-        <View style={{ flex: 1 }}>
-          <ScrollView keyboardShouldPersistTaps="handled">
-              <TextInput
-                placeholder="City"
-                onChangeText={
-                  (userCity) => setUserCity(userCity)
-                }
-                style={{ padding: 10 }}
-              />
-              <TextInput
-                placeholder="State"
-                onChangeText={
-                  (userState) => setUserState(userState)
-                }
-                style={{ padding: 10 }}
-              />
-              <TextInput
-                placeholder="Country"
-                onChangeText={
-                  (userCountry) => setUserCountry(userCountry)
-                }
-                style={{ padding: 10 }}
-              />
-              <Button 
-              title="Submit"
-              color="#CD5C5C" 
-              onPress={
-                () => { registerCity(); navigation.navigate('Maps');
-                }
-              } 
-              />
-          </ScrollView>
+      <View style={styles.input}>
+        <TextInput
+          style={styles.text_input}
+          placeholder="City"
+          onChangeText={
+            (userCity) => setUserCity(userCity)
+          }
+        />
+        <TextInput
+        style={styles.text_input}
+          placeholder="State"
+          onChangeText={
+            (userState) => setUserState(userState)
+          }
+        />
+        <TextInput
+        style={styles.text_input}
+          placeholder="Country"
+          onChangeText={
+            (userCountry) => setUserCountry(userCountry)
+          }
+        />
+        <View style={styles.btn_row} >
+          <Button
+            title="Agregar"
+            color="#CD5C5C"
+
+            onPress={
+              () => {
+                getWeather(); navigation.navigate('Maps', { cityLon: coordCity.lon, cityLat: coordCity.lat, ciudad: userCity, provincia: userState, pais: userCountry });
+              }
+            }
+
+          // onPress={
+          //   () => { registerCity(); navigation.navigate('Maps');
+          //   }
+          // } 
+          />
+          <Button
+            title="Cancelar"
+            color="#CD5C5C"
+            onPress={
+              () => {
+                navigation.navigate('ViewAllCities');
+              }
+            }
+          />
         </View>
       </View>
+
     </SafeAreaView>
   );
 };
@@ -102,27 +161,29 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'space-around',
-    //alignItems: 'center',
     backgroundColor: '#FDEDEC',
-  },
-  body: {
-    flex: 1,
-    alignItems: 'center',
   },
   text: {
     fontSize: 40,
     margin: 10,
   },
   input: {
-    width: 300,
-    borderWidth: 1,
-    borderColor: '#555',
-    borderRadius: 10,
-    backgroundColor: '#ffffff',
-    textAlign: 'center',
-    fontSize: 20,
-    marginTop: 130,
-    marginBottom: 10,
+    height: 300,
+    justifyContent: 'center',
+    backgroundColor: 'white',
+    padding: 5,
+    paddingHorizontal: 40,
+    marginTop: StatusBar.currentHeight || 0,
+  },
+  text_input: {
+    height: 30,
+
+  },
+  btn_row: {
+    top: 30,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignContent: 'center',
   },
 });
 

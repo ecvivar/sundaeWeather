@@ -1,33 +1,33 @@
 import React, { useEffect, useState } from 'react';
-import {Text, View, FlatList, SafeAreaView, TouchableOpacity, StyleSheet, StatusBar, Button } from 'react-native';
+import { Text, View, FlatList, SafeAreaView, TouchableOpacity, StyleSheet, StatusBar, Button } from 'react-native';
 import * as SQLite from 'expo-sqlite';
 
 //Conexion a la DB
 const db = SQLite.openDatabase('city_db.db');
 
-const ViewAllCities = ({navigation}) => {
+const ViewAllCities = ({ navigation }) => {
   let [flatListItems, setFlatListItems] = useState([]);
 
-//Consulta a la DB
+  //Consulta a la DB
   useEffect(() => {
     db.transaction((tx) => {
       tx.executeSql('SELECT * FROM tbl_city',
-      [],
-      (tx, results) => {
-        var temp = [];
-        for (let i = 0; i < results.rows.length; ++i)
-          temp.push(results.rows.item(i));
-        setFlatListItems(temp);
-      });
+        [],
+        (tx, results) => {
+          var temp = [];
+          for (let i = 0; i < results.rows.length; ++i)
+            temp.push(results.rows.item(i));
+          setFlatListItems(temp);
+        });
     });
   }, []);
 
-//Listar los item
+  //Listar los item
   let listItemView = (item) => {
     return (
-      <View 
+      <View
         key={item.city_id}
-        style={{backgroundColor: 'white', padding: 10, paddingHorizontal: 80, marginTop: StatusBar.currentHeight || 0}}>
+      >
         <Text>Id: {item.city_id}</Text>
         <Text>City: {item.city_name}</Text>
         <Text>State: {item.city_state}</Text>
@@ -39,42 +39,42 @@ const ViewAllCities = ({navigation}) => {
 
 
   return (
-    <SafeAreaView style={styles.container}>  
-            <FlatList
-              data={flatListItems}
-              keyExtractor={(item, index) => index.toString()}
-              renderItem={({item}) => (
-                <View 
-                  key={item.city_id}
-                  style={styles.item}>
-                  <Text>Id: {item.city_id}</Text>
-                  <Text>City: {item.city_name}</Text>
-                  <Text>State: {item.city_state}</Text>
-                  <Text>Country: {item.city_country}</Text>
+    <SafeAreaView style={styles.container}>
+      <FlatList
+        data={flatListItems}
+        keyExtractor={(item, index) => index.toString()}
+        renderItem={({ item }) => (
+          <View
+            key={item.city_id}
+            style={styles.item}>
+            <Text>Id: {item.city_id}</Text>
+            <Text>City: {item.city_name}</Text>
+            <Text>State: {item.city_state}</Text>
+            <Text>Country: {item.city_country}</Text>
 
-                  <View style={styles.btn_row} >
-                    <Button                    
-                      title= 'Weather'
-                      color='#CD5C5C'
-                      onPress={() => navigation.navigate('Weather', { paramKey: item.city_id,})}>
-                    </Button>
-                      
-                    <Button 
-                      title= 'Delete'
-                      color='#CD5C5C'
-                      onPress={() => navigation.navigate('Delete', { paramKey: item.city_id,})}
-                      >
-                    </Button>
-                  </View>
-                </View>
-              )}
-            />
-      
-      <TouchableOpacity style={styles.btn}
-        onPress={() => navigation.navigate('Add')}>
-        <Text>Add</Text>
-      </TouchableOpacity>
-      
+            <View style={styles.btn_row} >
+              <Button
+                title='Weather'
+                color='#CD5C5C'
+                onPress={() => navigation.navigate('Weather', { paramKey: item.city_id, })}>
+              </Button>
+
+              <Button
+                title='Delete'
+                color='#CD5C5C'
+                onPress={() => navigation.navigate('Delete', { paramKey: item.city_id, })}
+              >
+              </Button>
+            </View>
+          </View>
+        )}
+      />
+      <View style={styles.add_row}>
+        <TouchableOpacity style={styles.btn}
+          onPress={() => navigation.navigate('Add')}>
+          <Text>Add</Text>
+        </TouchableOpacity>
+      </View>
     </SafeAreaView>
   );
 };
@@ -83,32 +83,35 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'space-around',
-    //alignItems: 'center',
     backgroundColor: '#FDEDEC',
   },
   item: {
-    backgroundColor: 'white', 
-    padding: 5, 
-    paddingHorizontal: 40, 
+    backgroundColor: 'white',
+    padding: 5,
+    paddingHorizontal: 40,
     marginTop: StatusBar.currentHeight || 0,
   },
   title: {
     fontSize: 16,
   },
   btn: {
-    position: 'absolute',
     bottom: 70,
-    left:150,
     height: 60,
     width: 60,
     borderRadius: 100,
-    backgroundColor:'#CD5C5C',
+    backgroundColor: '#CD5C5C',
     alignItems: 'center',
     justifyContent: 'center',
   },
+  add_row: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignContent: 'center',
+  },
   btn_row: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'space-around',
+    alignContent: 'center',
   },
   centeredView: {
     flex: 1,
