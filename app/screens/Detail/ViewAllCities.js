@@ -35,9 +35,7 @@ const ViewAllCities = ({ navigation }) => {
       </View>
     );
   };
-
-
-
+  
   return (
     <SafeAreaView style={styles.container}>
       <FlatList

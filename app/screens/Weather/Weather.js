@@ -1,11 +1,12 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {View, Text, Button, StyleSheet, Alert} from 'react-native';
 import * as SQLite from 'expo-sqlite';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 
 const db = SQLite.openDatabase('city_db.db');
 
-const Weather = ({route, navigation}) => {
+function Weather ({route, navigation}) {
   const [userCity, setUserCity] = useState({});
   const [infoCity, setInfoCity] = useState({});
 
@@ -24,10 +25,10 @@ const Weather = ({route, navigation}) => {
 
 //API_KEY = '562c8cf7ac4589daca68d9eeaa5237ea';
 
-  const getWeather = () => {
+  function getWeather() {
 
-    console.log(userCity.city_name);
-    console.log(userCity.city_state);
+    // console.log(userCity.city_name);
+    // console.log(userCity.city_state);
 
     if (userCity.city_name != null) {  
       axios.get(`https://api.openweathermap.org/data/2.5/weather?q=${userCity.city_name},${userCity.city_country}&appid=128cbb6d697b9515f235f503e5961922&units=metric&lang=esp`)
@@ -43,12 +44,16 @@ const Weather = ({route, navigation}) => {
         })
         console.log('weather',info)
       })
-
-    } else {
-      Alert.alert("Ciudad no encontrada");
     }
   }
-      return (
+
+  useEffect(() => {
+    getWeather()
+  },[userCity.city_name]);
+  
+      
+        const {ciudad, pais, condiciones, temperatura, humedad, viento}=infoCity;
+        return (
         <View style={styles.container}>
           <Text>Weather City</Text>
           <Text>{route.params.paramKey}</Text>
@@ -59,7 +64,7 @@ const Weather = ({route, navigation}) => {
             <Text> City Country: {userCity.city_country} </Text>
           </View> */}
           <View>
-            <Text>Ciudad: {infoCity.ciudad}</Text>
+            <Text>Ciudad: {ciudad}</Text>
             <Text>Pais: {infoCity.pais}</Text>
             <Text>Condiciones: {infoCity.condiciones}</Text>
             <Text>Temperatura: {infoCity.temperatura}</Text>
@@ -67,11 +72,11 @@ const Weather = ({route, navigation}) => {
             <Text>Viento: {infoCity.viento}</Text>
           </View>
           <View style={styles.btn_row} >
-          <Button
+          {/* <Button
             title="Weather"
             color="#CD5C5C"
             onPress={getWeather}
-          />
+          /> */}
           <Button
             title="Cerrar"
             color="#CD5C5C"
@@ -79,8 +84,8 @@ const Weather = ({route, navigation}) => {
           />
           </View>
         </View>
-      );
-};
+        )
+}
 
   const styles = StyleSheet.create({
     container: {
@@ -95,4 +100,5 @@ const Weather = ({route, navigation}) => {
     },
   });
 
-export default Weather;  
+export default Weather;
+
