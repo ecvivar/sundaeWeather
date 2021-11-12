@@ -9,18 +9,18 @@ const ViewAllCities = ({ navigation }) => {
   let [flatListItems, setFlatListItems] = useState([]);
 
   //Consulta a la DB
-  useEffect(() => {
-    db.transaction((tx) => {
-      tx.executeSql('SELECT * FROM tbl_city',
-        [],
-        (tx, results) => {
-          var temp = [];
-          for (let i = 0; i < results.rows.length; ++i)
-            temp.push(results.rows.item(i));
-          setFlatListItems(temp);
-        });
-    });
-  }, []);
+  //  useEffect(() => {
+  db.transaction((tx) => {
+    tx.executeSql('SELECT * FROM tbl_city',
+      [],
+      (tx, results) => {
+        var temp = [];
+        for (let i = 0; i < results.rows.length; ++i)
+          temp.push(results.rows.item(i));
+        setFlatListItems(temp);
+      });
+  });
+  //  }, []);
 
   //Listar los item
   let listItemView = (item) => {
@@ -35,7 +35,7 @@ const ViewAllCities = ({ navigation }) => {
       </View>
     );
   };
-  
+
   return (
     <SafeAreaView style={styles.container}>
       <FlatList

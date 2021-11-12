@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   StyleSheet,
@@ -9,43 +9,78 @@ import {
 } from 'react-native';
 import * as SQLite from 'expo-sqlite';
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
+import axios from 'axios';
 
 const db = SQLite.openDatabase('city_db.db');
 
 const Maps = ({ route, navigation }) => {
-  const { cityLon, cityLat, ciudad, provincia, pais } = route.params;
 
-  const lon = parseFloat(route.params.cityLon);
-  const lat = parseFloat(route.params.cityLat);
+  const { ciudad, provincia, pais } = route.params;
+  const [coordCity, setCoordCity] = useState({});
 
+  //Obtenemos las coordenadas de la API de Openweather para pasarlas al mapa
+  function getCoord() {
+    axios.get(`https://api.openweathermap.org/data/2.5/weather?q=${ciudad},${provincia},${pais}&appid=128cbb6d697b9515f235f503e5961922&units=metric&lang=esp`)
+      .then(response => {
+        const info = response.data;
+        setCoordCity({
+          ciudad: info.name,
+          pais: info.sys.country,
+          lon: info.coord.lon,
+          lat: info.coord.lat
+        });
+        //console.log('weather', info);
+        //console.log('Longitud:', info.coord.lon);
+        //console.log('Latitud:', info.coord.lat);
+      }).catch((error) => {
+        Alert.alert(
+          'Advertencia', 'Ciudad no encontrada, revise los datos ingresados',
+          [
+            {
+              text: 'Ok',
+              onPress: () => navigation.navigate('Add'),
+            },
+          ],
+          { cancelable: false },
+        );
+      })
+  }
+
+  useEffect(() => {
+    getCoord()
+  }, []);
+
+  //Definimos la localizacion con los datos obtenidos de la consulta a la API OpenWeather
   const location = {
-    latitude: route.params.cityLat,
-    longitude: route.params.cityLon,
+    latitude: coordCity.lat,
+    longitude: coordCity.lon,
     latitudeDelta: 0.5,
     longitudeDelta: 0.5
   }
 
-  const registerCity = () => {
+  //Funcion para registrar Ciudad en la Base de Datos si la localizacion es la correcta
+  function registerCity() {
     db.transaction((tx) => {
       tx.executeSql(
         'INSERT INTO tbl_city (city_name, city_state, city_country) VALUES (?,?,?)',
-        [route.params.ciudad, route.params.provincia, route.params.pais],
+        [ciudad, provincia, pais],
         (tx, results) => {
           console.log('Results', results.rowsAffected);
-           if (results.rowsAffected > 0) {
-             Alert.alert(
-               'Success',
-               'La ciudad ha sido agregada correctamente',
-               [
-                 {
-                   text: 'Ok',
-                   onPress: () => navigation.navigate('ViewAllCities'),
-                 },
-               ],
-               { cancelable: false },
-             );
-           } else {alert('La ciudad no se agrego')
-           }
+          if (results.rowsAffected > 0) {
+            Alert.alert(
+              'Success',
+              'La ciudad ha sido agregada correctamente',
+              [
+                {
+                  text: 'Ok',
+                  onPress: () => navigation.navigate('ViewAllCities'),
+                },
+              ],
+              { cancelable: false },
+            );
+          } else {
+            alert('La ciudad no se agrego');
+          }
         });
     });
   }
@@ -54,10 +89,9 @@ const Maps = ({ route, navigation }) => {
 
     <View style={styles.container}>
       <MapView
-        //customMapStyle={mapStyle}
         provider={PROVIDER_GOOGLE}
         style={styles.mapStyle}
-        mapType='standar'
+        mapType='hybrid'
         region={location}
       ></MapView>
       <View style={styles.btn_row}>
@@ -69,7 +103,6 @@ const Maps = ({ route, navigation }) => {
               navigation.navigate('Add');
             }
           }
-
         />
         <Button
           title="Confirmar"
@@ -82,9 +115,10 @@ const Maps = ({ route, navigation }) => {
           }
         />
       </View>
-      <View>
-        <Text>Longitud:{route.params.cityLon}</Text>
-        <Text>Latitud:{route.params.cityLat}</Text>
+      <View style={styles.txt_map}>
+        <Text>Ciudad: {route.params.ciudad} </Text>
+        <Text>Latitud: {coordCity.lat} </Text>
+        <Text>Longitud: {coordCity.lon} </Text>
       </View>
     </View>
   );
@@ -106,6 +140,17 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignContent: 'center',
+  },
+  txt_map: {
+    height: 80,
+    width: '60%',
+    margin: 10,
+    backgroundColor: 'white',
+    borderColor: 'black',
+    borderWidth: 1,
+    borderRadius: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });
 

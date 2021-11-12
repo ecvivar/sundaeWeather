@@ -1,33 +1,20 @@
 import React, { useState } from 'react';
-import {View, Text, Button, StyleSheet, Alert} from 'react-native';
+import { View, Text, Button, StyleSheet, Alert } from 'react-native';
 //import {openDatabase} from 'react-native-sqlite-storage';
 import * as SQLite from 'expo-sqlite';
 
 const db = SQLite.openDatabase('city_db.db');
 
-const Delete = ({route, navigation}) => {
-  let [userCity, setUserCity]=useState({});
+const Delete = ({ route, navigation }) => {
+  let [userCity, setUserCity] = useState({});
 
   let deleteCity = () => {
     db.transaction((tx) => {
       tx.executeSql('DELETE FROM tbl_city where city_id = ?',
-      [route.params.paramKey],
-      (tx, results) => {
-        console.log('Results', results.rowsAffected);
-        // if (results.rowsAffected > 0) {
-        //   Alert(
-        //     'Success','La ciudad seleccionada ha sido borrada',
-        //     [
-        //       {text: 'Ok',
-        //       onPress: () => navigation.navigate('ViewAllCities'),
-        //       },
-        //     ],
-        //     {cancelable: false},
-        //     );
-        // } else {
-        //   alert('No se encontron datos');
-        // }
-      });
+        [route.params.paramKey],
+        (tx, results) => {
+          console.log('Results', results.rowsAffected);
+        });
     });
   };
 
@@ -37,10 +24,10 @@ const Delete = ({route, navigation}) => {
       <Button
         title="Delete"
         color="#CD5C5C"
-        // onPress = {navigation.navigate('ViewAllCities')}
         onPress={
-          () => { deleteCity(); navigation.navigate('Home');
-                }
+          () => {
+            deleteCity(); navigation.navigate('ViewAllCities');
+          }
         }
       />
     </View>

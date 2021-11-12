@@ -55,12 +55,12 @@ const styles = StyleSheet.create({
     resizeMode: 'contain',
   },
   text: {
-    fontFamily: 'FredokaOne-Regular',
+    // fontFamily: 'FredokaOne-Regular',
     color: '#CD5C5C',
     fontSize: 50,
   },
   descripcion: {
-    fontFamily: 'Gluten-Bold',
+    // fontFamily: 'Gluten-Bold',
     color: '#CD5C5C',
     fontSize: 20,
     textAlign: 'center',
