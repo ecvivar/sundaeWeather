@@ -15,7 +15,7 @@ const db = SQLite.openDatabase('city_db.db');
 
 const Maps = ({ route, navigation }) => {
 
-  const { ciudad, pais } = route.params;
+  const { ciudad, provincia, pais } = route.params;
   const [coordCity, setCoordCity] = useState({});
 
   //Obtenemos las coordenadas de la API de Openweather para pasarlas al mapa
