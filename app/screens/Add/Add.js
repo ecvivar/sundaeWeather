@@ -105,7 +105,7 @@ const Add = ({ navigation }) => {
                   style={styles.btn_input}
                   onPress={
                     () => {
-                      handleSubmit; navigation.navigate('Maps', { ciudad: values.city_name, provincia: values.city_state, pais: values.city_country });
+                      handleSubmit; navigation.navigate('Maps', { ciudad: values.city_name, pais: values.city_country });
                     }
                   }
                   title="Agregar Ciudad"

@@ -15,12 +15,12 @@ const db = SQLite.openDatabase('city_db.db');
 
 const Maps = ({ route, navigation }) => {
 
-  const { ciudad, provincia, pais } = route.params;
+  const { ciudad, pais } = route.params;
   const [coordCity, setCoordCity] = useState({});
 
   //Obtenemos las coordenadas de la API de Openweather para pasarlas al mapa
   function getCoord() {
-    axios.get(`https://api.openweathermap.org/data/2.5/weather?q=${ciudad},${provincia},${pais}&appid=128cbb6d697b9515f235f503e5961922&units=metric&lang=esp`)
+    axios.get(`https://api.openweathermap.org/data/2.5/weather?q=${ciudad},${pais}&appid=128cbb6d697b9515f235f503e5961922&units=metric&lang=esp`)
       .then(response => {
         const info = response.data;
         setCoordCity({
@@ -30,8 +30,8 @@ const Maps = ({ route, navigation }) => {
           lat: info.coord.lat
         });
         //console.log('weather', info);
-        //console.log('Longitud:', info.coord.lon);
-        //console.log('Latitud:', info.coord.lat);
+        console.log('Longitud:', info.coord.lon);
+        console.log('Latitud:', info.coord.lat);
       }).catch((error) => {
         Alert.alert(
           'Advertencia', 'Ciudad no encontrada, revise los datos ingresados',
