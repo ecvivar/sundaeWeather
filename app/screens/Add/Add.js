@@ -6,11 +6,13 @@ import {
   TextInput,
   SafeAreaView,
   StatusBar,
-  TouchableOpacity
+  TouchableOpacity,
+  Alert,
 } from 'react-native';
 import * as SQLite from 'expo-sqlite';
 import { Formik } from 'formik';
 import * as yup from 'yup';
+import axios from "axios";
 
 const db = SQLite.openDatabase('city_db.db');
 
@@ -31,7 +33,57 @@ const addCityValidationSchema = yup.object().shape({
 });
 
 const Add = ({ navigation }) => {
+  //useState para tomar las coordenadas
+  const [coordCity, setCoordCity] = useState({});
 
+  // Al actualizar coordenadas, ubica la ciudad en el mapa
+  const initialRender = useRef(true);
+  useEffect(() => {
+    if (initialRender.current) {
+      initialRender.current = false;
+    } else {
+      navigation.navigate("Maps", {
+        cityLon: coordCity.lon,
+        cityLat: coordCity.lat,
+        ciudad: coordCity.ciudad,
+        provincia: coordCity.provincia,
+        pais: coordCity.pais,
+      });
+    }
+  }, [coordCity]);
+
+  // Obtener latitud y longitud de la ciudad y actualizar coordenadas
+  const getGeolocation = (values) => {
+    const params = {
+      access_key: "08fd69a09f6670aa5cc0c6997b6535a3",
+      query: `${values.city_name} ${values.city_state} ${values.city_country}`,
+    };
+
+    axios
+      .get("http://api.positionstack.com/v1/forward", { params })
+      .then((response) => {
+        const info = response.data.data[0];
+        setCoordCity({
+          ciudad: info.name,
+          provincia: info.region,
+          pais: info.country,
+          lon: info.longitude,
+          lat: info.latitude,
+        });
+      })
+      .catch((error) => {
+        Alert.alert(
+          'Advertencia', 'Ciudad no encontrada, revise los datos ingresados',
+          [
+            {
+              text: 'Ok',
+              onPress: () => navigation.navigate('Add'),
+            },
+          ],
+          { cancelable: false },
+        );
+      });
+  };
   return (
     <>
       <SafeAreaView style={styles.container}>
@@ -43,7 +95,7 @@ const Add = ({ navigation }) => {
               city_state: '',
               city_country: ''
             }}
-            onSubmit={values => console.log(values)}
+            onSubmit={(values) => getGeolocation(values)}
           >
             {({
               handleChange,
@@ -103,11 +155,7 @@ const Add = ({ navigation }) => {
 
                 <TouchableOpacity
                   style={styles.btn_input}
-                  onPress={
-                    () => {
-                      handleSubmit; navigation.navigate('Maps', { ciudad: values.city_name, provincia: values.city_name, pais: values.city_country });
-                    }
-                  }
+                  onPress={handleSubmit}
                   title="Agregar Ciudad"
                   disabled={!isValid || values.city_name === ''}
                 >
@@ -144,6 +192,7 @@ const styles = StyleSheet.create({
     height: 40,
     width: '100%',
     margin: 10,
+    paddingLeft: 20,
     backgroundColor: 'white',
     borderColor: 'black',
     borderWidth: 1,
