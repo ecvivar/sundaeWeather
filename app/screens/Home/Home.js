@@ -1,6 +1,7 @@
 import React, {useEffect} from 'react';
 import {Text, View, Animated, StyleSheet, Button, ImageBackground, TouchableOpacity} from 'react-native';
 import Logo from '../../assets/sundae.png';
+import LogoText from '../../assets/logo.png';
 import * as SQLite from 'expo-sqlite';
 import Bg from '../../assets/bg-gradient.jpg';
 
@@ -31,11 +32,10 @@ export default function Home ({ navigation }) {
   }, []);
 
   return (
+    <ImageBackground source={Bg} resizeMode="cover" style={styles.bg}>
     <View style={styles.container}>
-      <ImageBackground source={Bg} resizeMode="cover" style={styles.bg}>
           <Animated.Image source={Logo} style={styles.image} />
-
-          <Animated.Text style={styles.text}>The Sundae app</Animated.Text>
+          <Animated.Image source={LogoText} style={styles.imageText} />
 
           <Text style={styles.descripcion}>
           ¡Busca tu ciudad y accede al pronostico en tiempo real!
@@ -50,9 +50,9 @@ export default function Home ({ navigation }) {
           <FontAwesomeIcon icon={ faArrowDown } style={styles.icon} />
           
           </TouchableOpacity>
+      </View>
 
         </ImageBackground>
-      </View>
   );
 };
 
@@ -60,32 +60,35 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'space-around',
   },
 
   bg: {
     flex: 1,
     width: '100%',
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'space-around'
   },
 
   image: {
+    marginTop: 50,
     width: 150,
     height: 150,
+
+  },
+  imageText: {
+    width: 280,
+    height: 150,
     resizeMode: 'contain',
+    
   },
-  text: {
-    //fontFamily: 'Roboto_400Regular',
-    color: '#ffffff',
-    fontSize: 35,
-  },
+
   descripcion: {
     color: '#ffffff',
     fontSize: 20,
     textAlign: 'center',
-    padding: 25,
+    width: '80%',
+ 
   },
   btn: {
     color: 'white',
@@ -93,5 +96,7 @@ const styles = StyleSheet.create({
     width: 45,
     alignItems: 'center',
     justifyContent: 'center',
+
   },
+
 });

@@ -4,6 +4,7 @@ import * as SQLite from 'expo-sqlite';
 import axios from 'axios';
 import Bg from '../../assets/bg-gradient.jpg';
 
+
 const db = SQLite.openDatabase('city_db.db');
 
 function Weather({ route, navigation }) {
