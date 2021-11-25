@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect, useRef } from "react";
 import {
   StyleSheet,
   View,
@@ -8,28 +8,31 @@ import {
   StatusBar,
   TouchableOpacity,
   Alert,
-} from 'react-native';
-import * as SQLite from 'expo-sqlite';
-import { Formik } from 'formik';
-import * as yup from 'yup';
+} from "react-native";
+import * as SQLite from "expo-sqlite";
+import { Formik } from "formik";
+import * as yup from "yup";
 import axios from "axios";
 
-const db = SQLite.openDatabase('city_db.db');
+const db = SQLite.openDatabase("city_db.db");
 
 //Schema validation
 const addCityValidationSchema = yup.object().shape({
-  city_name: yup.string()
-    .min(3, 'Pocos Caracteres')
-    .max(100, 'Demasiados Caracteres')
-    .required('Debe ingresar el nombre de la Ciudad'),
-  city_state: yup.string()
-    .min(3, 'Pocos Caracteres')
-    .max(100, 'Demasiados Caracteres')
-    .required('Debe ingresar el nombre de la Provincia'),
-  city_country: yup.string()
-    .min(3, 'Pocos Caracteres')
-    .max(100, 'Demasiados Caracteres')
-    .required('Debe ingresar el nombre del Pais'),
+  city_name: yup
+    .string()
+    .min(3, "Pocos Caracteres")
+    .max(100, "Demasiados Caracteres")
+    .required("Debe ingresar el nombre de la Ciudad"),
+  city_state: yup
+    .string()
+    .min(3, "Pocos Caracteres")
+    .max(100, "Demasiados Caracteres")
+    .required("Debe ingresar el nombre de la Provincia"),
+  city_country: yup
+    .string()
+    .min(3, "Pocos Caracteres")
+    .max(100, "Demasiados Caracteres")
+    .required("Debe ingresar el nombre del Pais"),
 });
 
 const Add = ({ navigation }) => {
@@ -50,6 +53,7 @@ const Add = ({ navigation }) => {
         pais: coordCity.pais,
       });
     }
+    
   }, [coordCity]);
 
   // Obtener latitud y longitud de la ciudad y actualizar coordenadas
@@ -73,14 +77,15 @@ const Add = ({ navigation }) => {
       })
       .catch((error) => {
         Alert.alert(
-          'Advertencia', 'Ciudad no encontrada, revise los datos ingresados',
+          "Advertencia",
+          "Ciudad no encontrada, revise los datos ingresados",
           [
             {
-              text: 'Ok',
-              onPress: () => navigation.navigate('Add'),
+              text: "Ok",
+              onPress: () => navigation.navigate("Add"),
             },
           ],
-          { cancelable: false },
+          { cancelable: false }
         );
       });
   };
@@ -91,9 +96,9 @@ const Add = ({ navigation }) => {
           <Formik
             validationSchema={addCityValidationSchema}
             initialValues={{
-              city_name: '',
-              city_state: '',
-              city_country: ''
+              city_name: "",
+              city_state: "",
+              city_country: "",
             }}
             onSubmit={(values) => getGeolocation(values)}
           >
@@ -107,57 +112,50 @@ const Add = ({ navigation }) => {
               isValid,
             }) => (
               <>
-
                 <TextInput
                   name="city_name"
                   style={styles.text_input}
                   placeholder="Nombre de la Ciudad"
-                  onChangeText={handleChange('city_name')}
-                  onBlur={handleBlur('city_name')}
+                  onChangeText={handleChange("city_name")}
+                  onBlur={handleBlur("city_name")}
                   value={values.city_name}
                 />
 
-                {(errors.city_name && touched.city_name) &&
-                  <Text style={styles.errorText}>
-                    {errors.city_name}
-                  </Text>
-                }
+                {errors.city_name && touched.city_name && (
+                  <Text style={styles.errorText}>{errors.city_name}</Text>
+                )}
 
                 <TextInput
                   name="city_state"
                   style={styles.text_input}
                   placeholder="Nombre de la Provincia"
-                  onChangeText={handleChange('city_state')}
-                  onBlur={handleBlur('city_state')}
+                  onChangeText={handleChange("city_state")}
+                  onBlur={handleBlur("city_state")}
                   value={values.city_state}
                 />
 
-                {(errors.city_state && touched.city_state) &&
-                  <Text style={styles.errorText}>
-                    {errors.city_state}
-                  </Text>
-                }
+                {errors.city_state && touched.city_state && (
+                  <Text style={styles.errorText}>{errors.city_state}</Text>
+                )}
 
                 <TextInput
                   name="city_country"
                   style={styles.text_input}
                   placeholder="Nombre del Pais"
-                  onChangeText={handleChange('city_country')}
-                  onBlur={handleBlur('city_country')}
+                  onChangeText={handleChange("city_country")}
+                  onBlur={handleBlur("city_country")}
                   value={values.city_country}
                 />
 
-                {(errors.city_country && touched.city_country) &&
-                  <Text style={styles.errorText}>
-                    {errors.city_country}
-                  </Text>
-                }
+                {errors.city_country && touched.city_country && (
+                  <Text style={styles.errorText}>{errors.city_country}</Text>
+                )}
 
                 <TouchableOpacity
                   style={styles.btn_input}
                   onPress={handleSubmit}
                   title="Agregar Ciudad"
-                  disabled={!isValid || values.city_name === ''}
+                  disabled={!isValid || values.city_name === ""}
                 >
                   <Text style={styles.text_btn}> Agregar Ciudad</Text>
                 </TouchableOpacity>
@@ -173,8 +171,8 @@ const Add = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'space-around',
-    backgroundColor: '#FDEDEC',
+    justifyContent: "space-around",
+    backgroundColor: "#FDEDEC",
   },
   text: {
     fontSize: 40,
@@ -182,45 +180,45 @@ const styles = StyleSheet.create({
   },
   input: {
     height: 300,
-    justifyContent: 'center',
-    backgroundColor: 'white',
+    justifyContent: "center",
+    backgroundColor: "white",
     padding: 5,
     paddingHorizontal: 40,
     marginTop: StatusBar.currentHeight || 0,
   },
   text_input: {
     height: 40,
-    width: '100%',
+    width: "100%",
     margin: 10,
     paddingLeft: 20,
-    backgroundColor: 'white',
-    borderColor: 'black',
+    backgroundColor: "white",
+    borderColor: "black",
     borderWidth: 1,
     borderRadius: 10,
   },
   btn_input: {
     height: 40,
-    width: '100%',
+    width: "100%",
     margin: 10,
-    backgroundColor: '#CD5C5C',
-    borderColor: '#CD5C5C',
+    backgroundColor: "#CD5C5C",
+    borderColor: "#CD5C5C",
     borderWidth: 1,
     borderRadius: 10,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
   text_btn: {
-    color: 'white',
+    color: "white",
   },
   btn_row: {
     top: 30,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignContent: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignContent: "center",
   },
   errorText: {
     fontSize: 10,
-    color: 'red',
+    color: "red",
   },
 });
 
