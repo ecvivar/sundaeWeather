@@ -1,7 +1,12 @@
 import React, {useEffect} from 'react';
-import {Text, View, Animated, StyleSheet, Button} from 'react-native';
-import Fondo from '../../assets/sundae.png';
+import {Text, View, Animated, StyleSheet, Button, ImageBackground, TouchableOpacity} from 'react-native';
+import Logo from '../../assets/sundae.png';
 import * as SQLite from 'expo-sqlite';
+import Bg from '../../assets/bg-gradient.jpg';
+
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faArrowDown } from '@fortawesome/free-solid-svg-icons'
+
 
 const db = SQLite.openDatabase('city_db.db');
 
@@ -27,45 +32,66 @@ export default function Home ({ navigation }) {
 
   return (
     <View style={styles.container}>
-      <Animated.Image source={Fondo} style={styles.image} />
-      <Animated.Text style={styles.text}>Sundae Weather</Animated.Text>
-      <Text style={styles.descripcion}>
-        Informacion del proyecto, proposito de la aplicacion, descripcion de
-        funcionalidades y uso de la misma.
-      </Text>
-      <Button
-        title="Iniciar"
-        color="#CD5C5C"
-        onPress={() => navigation.navigate('ViewAllCities')}
-      />
-    </View>
+      <ImageBackground source={Bg} resizeMode="cover" style={styles.bg}>
+          <Animated.Image source={Logo} style={styles.image} />
+
+          <Animated.Text style={styles.text}>The Sundae app</Animated.Text>
+
+          <Text style={styles.descripcion}>
+          ¡Busca tu ciudad y accede al pronostico en tiempo real!
+          </Text>
+
+          <TouchableOpacity
+            title="Iniciar"
+            style={styles.btn}
+            activeOpacity={0.7}
+            onPress={() => navigation.navigate('ViewAllCities')}
+          >     
+          <FontAwesomeIcon icon={ faArrowDown } style={styles.icon} />
+          
+          </TouchableOpacity>
+
+        </ImageBackground>
+      </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'space-around',
-    alignItems: 'center',
-    backgroundColor: '#FDEDEC',
+    display: 'flex',
   },
+
+  bg: {
+    flex: 1,
+    width: '100%',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'space-around'
+  },
+
   image: {
-    width: 200,
-    height: 200,
+    width: 150,
+    height: 150,
     resizeMode: 'contain',
   },
   text: {
-    // fontFamily: 'FredokaOne-Regular',
-    color: '#CD5C5C',
-    fontSize: 50,
+    //fontFamily: 'Roboto_400Regular',
+    color: '#ffffff',
+    fontSize: 35,
   },
   descripcion: {
-    // fontFamily: 'Gluten-Bold',
-    color: '#CD5C5C',
+    color: '#ffffff',
     fontSize: 20,
     textAlign: 'center',
+    padding: 25,
   },
   btn: {
-    color: '#CD5C5C',
+    color: 'white',
+    height: 45,
+    width: 45,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });
