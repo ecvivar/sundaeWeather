@@ -116,13 +116,13 @@ const styles = StyleSheet.create({
     card_text_temp: {
       color: 'white',
       fontSize: 55,
-      fontWeight: 400,
+      fontWeight: "400",
     },
     
     card_text: {
       color: 'white',
       fontSize: 18,
-      fontWeight: 450,
+      fontWeight: "400",
       paddingTop: 8,
     },
 

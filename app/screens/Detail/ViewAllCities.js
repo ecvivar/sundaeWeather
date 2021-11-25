@@ -25,22 +25,6 @@ const ViewAllCities = ({ navigation }) => {
         setFlatListItems(temp);
       });
   });
-  //  }, []);
-  /*
-  //Listar los item
-  let listItemView = (item) => {
-    return (
-      <View
-        key={item.city_id}
-      >
-        <Text>Id: {item.city_id}</Text>
-        <Text>City: {item.city_name}</Text>
-        <Text>State: {item.city_state}</Text>
-        <Text>Country: {item.city_country}</Text>
-      </View>
-    );
-  };
-*/ 
 
   return (
   <ImageBackground source={Bg} resizeMode="cover" style={styles.bg}>
@@ -119,7 +103,7 @@ const styles = StyleSheet.create({
   //----- Estilos card ----- 
   card: {
     padding: 10,
-    marginTop: 7,
+    margin: 7,
     marginHorizontal: 8,
     borderRadius: 15,
     backgroundColor: 'rgba(255, 255, 255, 0.270)',
@@ -129,14 +113,14 @@ const styles = StyleSheet.create({
   card_text: {
     color: 'white',
     fontSize: 18,
-    fontWeight: 450,
+    fontWeight: "400",
     paddingTop: 8,
   },
 
   card_text_temp: {
     color: 'white',
     fontSize: 25,
-    fontWeight: 500,
+    fontWeight: "500",
   },
 
   card_conditions: {
@@ -161,7 +145,7 @@ const styles = StyleSheet.create({
   btn_card_text: {
     color: 'white',
     fontSize: 16,
-    fontWeight: 500,
+    fontWeight: "500",
     letterSpacing: 1,
   },
 
