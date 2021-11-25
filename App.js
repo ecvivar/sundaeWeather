@@ -2,8 +2,6 @@ import React from 'react';
 import {Text, View, Animated, StyleSheet, Button, Alert} from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-//import {openDatabase} from 'react-native-sqlite-storage';
-import * as SQLite from 'expo-sqlite';
 
 //import Fondo from './assets/sundae.png';
 import Home from './app/screens/Home';
@@ -14,34 +12,21 @@ import Add from './app/screens/Add';
 import ViewAllCities from './app/screens/Detail/ViewAllCities';
 import Delete from './app/screens/Delete';
 
-// async function openDatabase(pathToDatabaseFile: string): Promise<SQLite.WebSQLDatabase> {
-//   if (!(await FileSystem.getInfoAsync(FileSystem.documentDirectory + 'SQLite')).exists) {
-//     await FileSystem.makeDirectoryAsync(FileSystem.documentDirectory + 'SQLite');
-//   }
-//   await FileSystem.downloadAsync(
-//     Asset.fromModule(require(pathToDatabaseFile)).uri,
-//     FileSystem.documentDirectory + 'SQLite/city.db'
-//   );
-//   return SQLite.openDatabase('city_db.db');
-// }
 
 const Stack = createNativeStackNavigator();
-
-// Connction to access DB
-//const db = openDatabase({name: 'city_db.db', createFromLocation: 1});
 
 const App = () => {
   return (
 
     <NavigationContainer>
       <Stack.Navigator>
-        <Stack.Screen name="Home" component={Home} />
+        <Stack.Screen name="Home" component={Home} options={ {title: 'Home'} } />
         <Stack.Screen name="Detail" component={Detail} />
-        <Stack.Screen name="Maps" component={Maps} />
-        <Stack.Screen name="Weather" component={Weather} />
-        <Stack.Screen name="Add" component={Add} />
-        <Stack.Screen name="ViewAllCities" component={ViewAllCities} />
-        <Stack.Screen name="Delete" component={Delete} />
+        <Stack.Screen name="Maps" component={Maps} options={ {title: 'Ubicación'} }/>
+        <Stack.Screen name="Weather" component={Weather} options={ {title: 'Clima actual'} }/>
+        <Stack.Screen name="Add" component={Add} options={ {title: 'Agregar ciudad'} }/>
+        <Stack.Screen name="ViewAllCities" component={ViewAllCities} options={ {title: 'Mis ciudades'} } />
+        <Stack.Screen name="Delete" component={Delete} options={ {title: 'Eliminar ciudad'} }/>
       </Stack.Navigator>
     </NavigationContainer>
 

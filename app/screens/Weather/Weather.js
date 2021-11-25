@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, Button, StyleSheet, Alert } from 'react-native';
+import { View, Text, Button, StyleSheet, Alert, ImageBackground } from 'react-native';
 import * as SQLite from 'expo-sqlite';
 import axios from 'axios';
+import Bg from '../../assets/bg-gradient.jpg';
 
 const db = SQLite.openDatabase('city_db.db');
 
@@ -53,39 +54,94 @@ function Weather({ route, navigation }) {
 
   const { ciudad, pais, condiciones, temperatura, humedad, viento } = infoCity;
   return (
+    <ImageBackground source={Bg} resizeMode="cover" style={styles.bg}>
+
     <View style={styles.container}>
-      <Text>Weather City</Text>
-      <Text>{route.params.paramKey}</Text>
-      <View>
-        <Text>Ciudad: {ciudad}</Text>
-        <Text>Pais: {infoCity.pais}</Text>
-        <Text>Condiciones: {infoCity.condiciones} </Text>
-        <Text>Temperatura: {infoCity.temperatura} °C </Text>
-        <Text>Humedad: {infoCity.humedad} % </Text>
-        <Text>Viento: {infoCity.viento} km/h</Text>
+
+      <View style={styles.card}>
+        <Text style={styles.card_title}>{ciudad}, {infoCity.pais}</Text>
+        <Text style={styles.card_text_temp}>{infoCity.temperatura}°</Text>
+
+      <View style={styles.card_info}> 
+        <Text style={styles.card_text}>Condiciones: {infoCity.condiciones}</Text>
+        <Text style={styles.card_text}>Humedad: {infoCity.humedad} % </Text>
+        <Text style={styles.card_text}>Viento: {infoCity.viento} km/h</Text>
       </View>
-      <View style={styles.btn_row} >
-        <Button
-          title="Cerrar"
-          color="#CD5C5C"
-          onPress={() => navigation.push('ViewAllCities')}
-        />
+
       </View>
+
     </View>
+    </ImageBackground>
   )
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'space-around',
-    alignItems: 'center',
-    backgroundColor: '#FDEDEC',
-  },
-  btn_row: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
+
+    container: {
+      flex: 1,
+      justifyContent: 'space-around',
+      alignItems: 'center',
+      width: '100%',
+    },
+
+    bg: {
+      flex: 1,
+      width: '100%',
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      justifyContent: 'space-around'
+    },
+
+    
+    card: {
+      padding: 10,
+      marginHorizontal: 8,
+      borderRadius: 15,
+      backgroundColor: 'rgba(255, 255, 255, 0.270)',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'space-evenly',
+      height: '80%',
+      width: '80%',
+    },
+    
+    card_title: {
+      color: 'white',
+      fontSize: 25,
+      marginTop: 20,
+    },
+
+    card_text_temp: {
+      color: 'white',
+      fontSize: 55,
+      fontWeight: 400,
+    },
+    
+    card_text: {
+      color: 'white',
+      fontSize: 18,
+      fontWeight: 450,
+      paddingTop: 8,
+    },
+
+    card_info: {
+     alignItems: 'center',
+    },
+
+
+
+
+  
+    btn_row: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+    },
+
+
+
+
+
 });
 
 export default Weather;
